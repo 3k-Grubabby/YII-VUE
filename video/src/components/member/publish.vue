@@ -3,7 +3,7 @@
             <el-row>
                 <el-col :span="12">
                     <h3>视频基本信息</h3>
-                        <el-form ref="video" :model="form" label-width="80px">
+                        <el-form ref="video" :model="video" label-width="80px">
                             <el-form-item label="活动名称" prop="v_title">
                                 <el-input v-model="video.v_title" placeholder="请填写视频标题"></el-input>
                             </el-form-item>
@@ -18,6 +18,28 @@
                                         </el-option>
                                  </el-select>
                             </el-form-item>
+                             <el-form-item label="视频封面" prop="v_class">
+                                    <el-upload
+                                    class="upload-demo"
+                                    action="http://localhost:9090/video/uploadpic"
+                                    :on-preview="handlePreview"
+                                    :on-remove="handleRemove"
+                                    :on-success="handleSuccess"
+                                    :multiple="false"
+                                    list-type="picture-card"
+                                    name="Uploader[file]"
+                                     >
+                                   <i class="el-icon-plus"></i>
+
+
+                                    </el-upload>
+                                   
+                                <el-dialog :visible.sync="dialogVisible" size="small">
+                                <img width="100%" :src="dialogImageUrl" alt="">
+                                </el-dialog>
+
+                              </el-form-item>   
+
                         </el-form>
                 </el-col>
                 <el-col :span="12">
@@ -40,9 +62,42 @@ export default {
       return {
           video:{
               v_title:"",
-              v_class:"2"
-          }
+              v_class:"2",
+              v_pic:{
+                  name:'',
+                  url:""
+              }
+          },
+         dialogVisible: false,
+         dialogImageUrl: '',
       }
+  },
+  methods: {
+      handleSuccess(file){
+          //响应成功
+            if(file.status==1){
+                this.video.v_pic.url = file.url;
+                this.video.v_pic.name = file.name;
+            }else{
+                alert('上传失败，请重启上传！');
+            }
+        
+      },
+      handlePreview(file){
+          //预览
+        this.dialogVisible = true;
+        this.dialogImageUrl = this.video.v_pic.url;
+      },
+      handleRemove(file){
+          //移除图片
+     
+        this.video.v_pic.url ='';
+        this.video.v_pic.name ='';
+      
+
+
+      }
+
   }
 }
 </script>
