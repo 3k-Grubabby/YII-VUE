@@ -5,11 +5,12 @@ module.exports =
     entry:
     {
        "member-index":[__dirname+'/src/jtthink/member-index.js'
-           ,'webpack-dev-server/client?http://127.0.0.1:8080'],
-       "web-index":[__dirname+'/src/jtthink/web-index.js']
+           ,'webpack-dev-server/client?http://localhost:8080'],
+       "web-index":[__dirname+'/src/jtthink/web-index.js'],
+       "user-index":[__dirname+'/src/jtthink/user-index.js' ,'webpack-dev-server/client?http://localhost:8080']
       },
     output: {
-        publicPath: "http://127.0.0.1:8080/",
+        publicPath: "http://localhost:8080/",
         path: __dirname+'/src/webapp/js',  //输出文件夹
         filename:'[name].js'   //最终打包生成的文件名(just 文件名，不带路径的哦)
     },
@@ -54,6 +55,13 @@ module.exports =
             inject:'body',
             hash:true,
             chunks:["web-index"]
+        }),
+        new HtmlWebpackPlugin({
+            filename:"./user/index.html",//用户登录注册
+            template: __dirname+'/src/pages/users/index.html',//模板文件
+            inject:'body',
+            hash:true,
+            chunks:["user-index"]
         }),
     ]
 

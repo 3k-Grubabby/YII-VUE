@@ -12,6 +12,8 @@ import "./../css/common.css";
 import VueResource from "vue-resource";
 import {RouterConfig} from "./../config/RouterConfig";
 
+require("qiniu-js/dist/qiniu.min.js");
+
 //引用路由
 import VueRouter from "vue-router";
 Vue.use(VueRouter);
