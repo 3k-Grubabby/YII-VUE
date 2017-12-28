@@ -12,7 +12,7 @@ namespace app\controllers;
 use yii\rest\ActiveController;
 use yii\web\Response;
 
-class TokenController extends ActiveController
+class TokenController extends BaseController
 {
     public $modelClass = 'app\m\Clients';
 

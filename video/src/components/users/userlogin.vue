@@ -18,7 +18,16 @@
 
 </style>
 <script>
-export default {
+export default {    
+    mounted(){
+            // let getUser = localStorage.getItem("CurrentUser");
+            // if(getUser!=null || getUser!=undefined){
+
+            
+            // }else{
+            //     alert('用户没有登陆');
+            // }
+    },
     data(){
         return{
             UserModel:{
@@ -40,20 +49,22 @@ export default {
     methods:{
         UserLogin()
            {
-                self.location="/member/"
+                // self.location="/member/"
                 // alert("用户登录成功 ");
             
-            //    this.$refs["users"].validate(function(v){
-            //        if(v)
-            //        {
-            //             localStorage.setItem("CurrentUser",this.UserModel.user_name);
-            //            alert("用户登录成功 ");
-            //        }
-            //        else
-            //        {
-            //            alert("用户名密码必填")
-            //        }
-            //    }.bind(this))
+               this.$refs["users"].validate(function(v){
+                   if(v)
+                   {
+                    //     localStorage.setItem("CurrentUser",this.UserModel.user_name);
+                    //    alert("用户登录成功 ");
+
+                    this.$store.dispatch("userLogin",{"user_name":this.UserModel.user_name,"user_pass":this.UserModel.user_pass});
+                   }
+                   else
+                   {
+                       alert("用户名密码必填")
+                   }
+               }.bind(this))
            }
     }
 }

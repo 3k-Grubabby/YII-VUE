@@ -24,9 +24,13 @@ Vue.use(global);
 Vue.use(VueResource);
 
 import ResModule from "./../Store/modules/resModules"; //引用资源模块
+import VideoModule from "./../Store/modules/VideoModule";//视频提交模块
+import UserModule from "./../Store/modules/UserModule"; //引用用户模块
 const vuex_config= new Vuex.Store({
     modules:{
-        res:ResModule
+        res:ResModule,
+        video:VideoModule,
+        users:UserModule
     }
 });
 

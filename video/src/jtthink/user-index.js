@@ -18,10 +18,12 @@ Vue.use(VueRouter);
 import {routerConfig_users} from "./../config/RouterConfig";
 
 import ResModule from "./../Store/modules/resModules"; //引用资源模块
+import UserModule from "./../Store/modules/UserModule"; //引用用户模块
 
 const vuex_config= new Vuex.Store({
     modules:{
-        res:ResModule
+        res:ResModule,
+        users:UserModule
     }
 });
 

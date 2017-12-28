@@ -21,7 +21,7 @@ class QiniuUtil
     {
         // 用于签名的公钥和私钥
         $accessKey = '6U9HazqxK_1DQWVqEYKHPex4-_I2HWBDnPRtXIBC';
-        $secretKey = '';
+        $secretKey = 'MQ-WajX45v3YfrKzjt_Mu2APW6IxB_r-3323F1Zv';
         // 初始化签权对象
         $this->auth = new Auth($accessKey, $secretKey);
         // 生成上传 Token

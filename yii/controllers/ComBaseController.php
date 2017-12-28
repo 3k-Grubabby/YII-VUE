@@ -20,7 +20,7 @@ class ComBaseController extends Controller
 
         header('Access-Control-Allow-Origin:*');
         header('Access-Control-Allow-Methods:GET,POST');
-        header('Access-Control-Allow-Headers:x-requested-with,content-type,if-modified-since, Date');
+        header('Access-Control-Allow-Headers:x-requested-with,content-type,if-modified-since');
 
 
     }

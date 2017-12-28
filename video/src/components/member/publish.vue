@@ -312,6 +312,7 @@ export default {
                             else
                             {
                                 //这里可以 入库了
+                                    myvue.$store.dispatch("submitVideo",myvue.video);
                             }
                         }
                         else

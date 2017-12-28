@@ -66,6 +66,7 @@ class Uploader extends Model
            }
 
         }
+
         return json_encode($result);
 
     }
