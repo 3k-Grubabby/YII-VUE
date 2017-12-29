@@ -25,9 +25,60 @@ class VideoController extends  ComBaseController
     }
 
 
-    function actionImgcallback() //图片上传回调
+
+    function actionSubmitvideo()//提交视频 函数
     {
 
+        if(Yii::$app->request->isPost)
+        {
+
+
+            //在这里我们还需要做一步 判断, 譬如必要的字段是否填写
+            //请大家课后自行完成，不要前台验证完了就算验证完了。
+            try
+            {
+
+                $model=ModelFactory::loadModel("videos");//主表
+
+                $model->v_title=Yii::$app->request->getBodyParam("v_title");//视频标题
+
+                $model->v_class=intval(Yii::$app->request->getBodyParam("v_class"));//视频类别
+                $model->v_intr=Yii::$app->request->getBodyParam("v_intr");
+
+                $model->v_pic=Yii::$app->request->getBodyParam("v_pic")["id"]; //注意v_pic 在前台也是一个子对象
+                $model->v_money=intval(Yii::$app->request->getBodyParam("v_money"));//价格
+                $model->v_file=Yii::$app->request->getBodyParam("v_videokey");
+
+                $model->v_tags=implode(",",Yii::$app->request->getBodyParam("v_tags"));//前台标签传过来是一个数组。我们把它组合成 逗号分隔的内容
+                if($model->save())
+                {
+                    //自定义一个返回 格式
+                    $result=new \stdClass();
+                    $result->status="success";
+                    $result->id=$model->v_id;
+                    Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;  //设置当前 content-type为application/json
+                    return  $result;
+                }
+            }
+            catch(Exception $ex)
+            {
+
+                //自定义一个错误返回 格式
+                $result=new \stdClass();
+                $result->status="error";
+                $result->msg=$ex->getMessage();
+                Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;  //设置当前 content-type为application/json
+                return  $result;
+            }
+
+        }
+
+
+    }
+
+
+    function actionImgcallback() //图片上传回调
+    {
         //七牛Post我们这个地址了
         if(Yii::$app->request->isPost)
         {
@@ -49,6 +100,30 @@ class VideoController extends  ComBaseController
 
     }
 
+    function actionVideocallback() //视频上传回调
+    {
+        //七牛Post我们这个地址了
+        if(Yii::$app->request->isPost)
+        {
+            $model=ModelFactory::loadModel("videos_files");//取出视频文件表model
+
+            if($model)
+            {
+                $model->vf_key=Yii::$app->request->post("key");
+                $model->save(); //新增一个值
+                $result=new \stdClass();
+                $result->response="success";
+                $result->key = Yii::$app->request->post("key");
+
+                Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;  //设置当前 content-type为application/json
+                return  $result;
+            }
+
+        }
+
+
+    }
+
 
 
 
@@ -56,6 +131,7 @@ class VideoController extends  ComBaseController
         $userid = 0; //默认0 超级管理员
         $util = new QiniuUtil();
         $ret = $util->getUploadToken($userid);
+
 
         return json_encode($ret);
     }

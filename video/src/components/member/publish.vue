@@ -136,7 +136,7 @@ export default {
        uptoken_url: 'http://127.0.0.1:9090/video/uptoken',         // Ajax请求uptoken的Url，强烈建议设置（服务端提供）
       // uptoken_func: function(){    // 在需要获取uptoken时，该方法会被调用
       //    // do something
-      //    return uptoken;
+      //    return uptoken; 
       // },
       get_new_uptoken: false,             // 设置上传文件的时候是否每次都重新获取新的uptoken
       // downtoken_url: '/downtoken',
@@ -186,6 +186,8 @@ export default {
                 myVue.videoProgress = file.percent;
           },
           'FileUploaded': function(up, file, info) {
+     
+               
                  // 每个文件上传成功后，处理相关的事情
                  // 其中info.response是文件上传成功后，服务端返回的json，形式如：
                  // {
@@ -196,11 +198,22 @@ export default {
                  // var domain = up.getOption('domain');
                  // var res = parseJSON(info.response);
                  // var sourceLink = domain +"/"+ res.key; 获取上传成功后的文件的Url
+                        // var res = parseJSON(info);
+                        // myVue.video.v_videokey=res.key; //这一步需要设置，否则上传后获取不到值
+
+                   
+                        var res = eval("("+info.response+")")
+                     
+                        myVue.video.v_videokey=res.key; //这一步需要设置，否则上传后获取不到值
+              
           },
           'Error': function(up, err, errTip) {
                  //上传出错时，处理相关的事情
           },
           'UploadComplete': function() {
+                            // console.log(up);
+       
+            
                  //队列文件处理完毕后，处理相关的事情
                  myVue.showProgress = false;
           },
@@ -270,6 +283,7 @@ export default {
   },
   methods: {
       handleSuccess(file){
+            console.log(file);
           //响应成功
             if(file.status==1){
                 this.video.v_pic.url = file.url;
@@ -299,33 +313,57 @@ export default {
       },
     submitVideo()
         {
-            this.$refs["videoForm1"].validate(function(v1){
-                if(v1) //如果验证第一个表单完成，还要验证第二个表单
-                {
-                    this.$refs["videoForm2"].validate(function(){
-                        if(v2)  //第二个验证完成，还需要判断对象里的值是否有
-                        {
-                            if(video.v_videokey=="" || video.v_pic.id==0) //粗糙的做个判断
-                            {
-                                alert("请上传视频封面和视频");
-                            }
-                            else
-                            {
-                                //这里可以 入库了
-                                    myvue.$store.dispatch("submitVideo",myvue.video);
-                            }
-                        }
-                        else
-                        {
-                            alert("请正确填写视频信息")
-                        }
-                    })
-                }
-                else
-                {
-                    alert("请正确填写视频信息")
-                }
-            })
+            
+              this.$refs.videoForm1.validate((v1)=>{
+                  if(v1){
+                      this.$refs.videoForm2.validate((v2)=>{
+
+                          if(v2){
+                  
+                              if(this.video.v_videokey=="" || this.video.v_pic.id==0) //粗糙的做个判断
+                               {
+                                 alert("请上传视频封面和视频");
+                               }else
+                                {
+                    
+                                    //这里可以 入库了
+                                        this.$store.dispatch("submitVideo",this.video);
+                                }
+                          }else{
+                                 alert("请正确填写视频信息");
+                          }
+                      })
+                  }else{
+                         alert("请正确填写视频信息");
+                  }
+              });
+            // this.$refs.videoForm1.validate(function(v1){
+            //     if(v1) //如果验证第一个表单完成，还要验证第二个表单
+            //     {
+            //         this.$refs.videoForm2.validate(function(){
+            //             if(v2)  //第二个验证完成，还需要判断对象里的值是否有
+            //             {
+            //                 if(video.v_videokey=="" || video.v_pic.id==0) //粗糙的做个判断
+            //                 {
+            //                     alert("请上传视频封面和视频");
+            //                 }
+            //                 else
+            //                 {
+            //                     //这里可以 入库了
+            //                         myvue.$store.dispatch("submitVideo",myvue.video);
+            //                 }
+            //             }
+            //             else
+            //             {
+            //                 alert("请正确填写视频信息")
+            //             }
+            //         })
+            //     }
+            //     else
+            //     {
+            //         alert("请正确填写视频信息")
+            //     }
+            // })
     },
       pauseUpload(){
 

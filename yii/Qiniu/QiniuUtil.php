@@ -25,16 +25,11 @@ class QiniuUtil
         // 初始化签权对象
         $this->auth = new Auth($accessKey, $secretKey);
         // 生成上传 Token
-        $this->token = $this->auth->uploadToken($this->bucket);
-
-
-//
-//        $this->auth->uploadToken($this->bucket,null,3600,[
-//            "callbackUrl"=>"http://www.jtthink.php/test.php",
-//            "callbackBody"=>'key=$(key)',
-//            "mimeLimit"=>"image/jpeg;image/png"
-//        ]);
-
+        $this->token = $this->auth->uploadToken($this->bucket,null,3600,[
+            "callbackUrl"=>"http://77talk.free.ngrok.cc/video/imgcallback",
+            "callbackBody"=>'key=$(key)',
+            "mimeLimit"=>"image/jpeg;image/png"
+        ]);
 
 
     }
@@ -44,17 +39,24 @@ class QiniuUtil
         // 初始化 UploadManager 对象并进行文件的上传。
         $uploadMgr = new UploadManager();
 
+
         // 调用 UploadManager 的 putFile 方法进行文件的上传。
         list($ret, $err) = $uploadMgr->putFile($this->token, $imgName, $imgPath);
-        if ($err !== null) {
-            return false;
-        } else {
+
+
+        if ($err !== null)
             return true;
-        }
+        return false;
+
     }
     function getUploadToken($userid){//生成视频上传专用的token
         $fileName =  "video".$userid.date("Ymdhis");//视频文件名，暂时么有后缀
-        $token = $this->auth->uploadToken($this->bucket,null,3600,["saveKey"=>"$fileName"]);
+
+        $token = $this->auth->uploadToken($this->bucket,null,3600,[
+            "callbackUrl"=>"http://77talk.free.ngrok.cc/video/videocallback",
+            "callbackBody"=>'key=$(key)',
+            "mimeLimit"=>"image/jpeg;image/png"
+        ]);
 
         $res = new \stdClass();
         $res->uptoken =$token;

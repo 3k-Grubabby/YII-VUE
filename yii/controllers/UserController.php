@@ -7,12 +7,14 @@
  */
 
 namespace app\controllers;
+use app\m\ModelFactory;
+use yii\filters\auth\QueryParamAuth;
 use yii\rest\ActiveController;
 use  yii\web\Controller;
 use app\m\News;
 use yii\web\Response;
 
-class UserController extends ActiveController
+class UserController extends BaseController
 {
 
 
@@ -21,32 +23,37 @@ class UserController extends ActiveController
     public function behaviors()
     {
         $behaviors = parent::behaviors();
-        $behaviors['contentNegotiator']['formats']['text/html'] = Response::FORMAT_JSON;
+        $behaviors['authenticator'] = [
+            'class' => QueryParamAuth::className(),
+        ];
+
         return $behaviors;
+
     }
 
     public function init()
     {
-
+        parent::init();
+        \Yii::$app->user->enableSession = false;
         $this->enableCsrfValidation =false;
     }
 
-    public function actionSay()
+
+    public function actionUnlog()
     {
-//        \Yii::$app->response->format = "json";
-//        $arr = ['name'=>'wangyoucheng','age'=>'18'];
-//        return $arr ;
-//           echo \Yii::$app->request->post('name','null');
-        $news = new News();
-//        $news->news_title = 'yii';
-//        $news->news_classid =3;
-//        $news->user_id =5;
-//        $news->save();
-//        echo  $news->news_id;
+        //用户注销
+        $token=\Yii::$app->request->get("access-token");
+        $clients=ModelFactory::loadModel("clients")->findOne(["client_token"=>$token]);
+        if($clients)
+        {
+            $clients->client_token=""; //把用户 token清空
+            if($clients->save())
+            {
+                return ['status'=>"success"];
+            }
+        }
 
-//        return   $news::find()->joinWith("newsClass")->all()[1]->newsClass->class_name;
-
-        return $news::find()->count();
+        return ['status'=>"error"];
 
 
     }

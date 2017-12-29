@@ -45,7 +45,8 @@ class Uploader extends Model
 
            if($vi->save()){//数据库插值成功
 
-               $qutil = new QiniuUtil();
+               $qutil = new  QiniuUtil();
+
                $img_path = 'images/videos/' .$vi->img_name;//图片保存的真实路径
 
                $this->imageFile->saveAs($img_path);//保存到真实路径

@@ -58,7 +58,9 @@ export default {
                     //     localStorage.setItem("CurrentUser",this.UserModel.user_name);
                     //    alert("用户登录成功 ");
 
-                    this.$store.dispatch("userLogin",{"user_name":this.UserModel.user_name,"user_pass":this.UserModel.user_pass});
+                    this.$store.dispatch("userLogin",{"user_name":this.UserModel.user_name,"user_pass":this.UserModel.user_pass,"success":function(){
+                           self.location="/member/"
+                    }});
                    }
                    else
                    {
